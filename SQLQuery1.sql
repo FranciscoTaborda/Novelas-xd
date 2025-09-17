@@ -1,154 +1,58 @@
-create database ejercicio2
+create database EstudianteAsignatura
 
-use ejercicio2
+use EstudianteAsignatura
 
-create table estudiantes (
+create table Estudiantes(
 
-	id_estudiante varchar(5) primary key,
-	nombre int not null,
-	apellido varchar(20) not null,
-	correo varchar(20) unique,
-	fecha_nacimiento varchar(10) not null,
-	telefono int check (telefono > 0),
-	edad int default 18 check( edad >= 18),
+	nombre varchar(20) not null,
+	id_estudiante int not null,
+	asignatura varchar(20) not null,
+	nota decimal(2,1) not null,
 
-);
-
-alter table estudiantes
-
-	drop constraint PK__estudian__E0B2763CE9596492
-
-alter table matriculas
-
-	drop constraint FK__matricula__id_es__45F365D3
-
-alter table estudiantes 
-
-	alter column id_estudiante int not null
-
-alter table estudiantes
-
-	add constraint PK_estudiante primary key (id_estudiante)
-
-alter table estudiantes
-
-	alter column nombre varchar(20)
-
-alter table estudiantes
-
-	alter column fecha_nacimiento date
-
-alter table estudiantes
-
-	drop constraint CK__estudiante__edad__403A8C7D
-
-alter table estudiantes
-
-	drop constraint DF__estudiante__edad__3F466844
-
-alter table estudiantes
-
-	drop constraint CK__estudiant__telef__3E52440B
-
-alter table estudiantes
-
-	alter column telefono bigint
-
-alter table estudiantes
-
-	add constraint CHECK_telefono CHECK ( telefono > 0 )
-	
-create table cursos (
-	
-	id_curso varchar(3) primary key,
-	titulo_curso char(10) not null,
-	creditos char(2) check ( creditos > 0 ),
-	descripcion varchar(15)
+	Constraint PK_id_estudiante Primary Key(id_estudiante, nombre)
 
 );
 
-alter table cursos
+insert into Estudiantes (nombre, id_estudiante, asignatura, nota ) values ('Juan', 1, 'Logica', 2.8)
 
-	drop constraint PK__cursos__5D3F75027E74E146
+insert into Estudiantes (nombre, id_estudiante, asignatura, nota ) values ('Maria', 2, 'Logica', 4.8)
 
-alter table matriculas
+insert into Estudiantes (nombre, id_estudiante, asignatura, nota ) values ('Juan', 3, 'Matematicas', 3.5)
 
-	drop constraint FK__matricula__id_cu__46E78A0C
+insert into Estudiantes (nombre, id_estudiante, asignatura, nota ) values ('Maria', 4, 'Desarrollo', 2.5)
 
-alter table cursos
+insert into Estudiantes (nombre, id_estudiante, asignatura, nota ) values ('Pedro', 5, 'Desarrollo', 4.2)
 
-	alter column id_curso int not null
+select distinct asignatura from Estudiantes as DiferentesAsignaturas
 
-alter table cursos
+select all * from Estudiantes as Todos
 
-	add constraint PK_curso primary key (id_curso)
+select * from Estudiantes as TodasColumnas
 
-alter table cursos
+select count(*) TotalRegistros from Estudiantes as CuantosEstudiantes
 
-	drop constraint CK__cursos__creditos__4316F928
+select count(distinct(nombre)) from Estudiantes as CuantosEstudiantesDifNom
 
-alter table cursos
+select count(distinct(asignatura)) from Estudiantes
 
-	alter column creditos int
+select top(2) * from Estudiantes
 
-alter table cursos
+select nombre, AVG(nota) as PromedioNotaEstudiante from Estudiantes group by (nombre)
 
-	add constraint CHECK_curso CHECK ( creditos > 0 )
+select asignatura, AVG(nota) as PromedioNotaAsignatura from Estudiantes group by (asignatura)
 
-alter table cursos
+select *  from Estudiantes as Sobre3_8 where nota > 3.8;
 
-	alter column titulo_curso varchar(30)
+select count(*) as CuantosLogica from Estudiantes where asignatura = 'logica';
 
-alter table cursos
-	
-	alter column descripcion varchar(50)
+select * from Estudiantes where Asignatura = 'Logica';
 
-create table matriculas (
+select max(nota) from Estudiantes as MayorNotaDesarrollo where asignatura = 'desarrollo' ;
 
-	id_matricula int primary key,
-	id_estudiante varchar(5) not null,
-	id_curso varchar(3) not null,
-	fecha_matricula varchar(8) not null,
-
-	foreign key (id_estudiante) references estudiantes(id_estudiante),
-	foreign key (id_curso) references cursos(id_curso)
-
-);
-
-alter table matriculas
-
-	alter column id_estudiante int not null
-
-alter table matriculas
-
-	alter column id_curso int not null
-
-alter table matriculas
-
-	alter column fecha_matricula date not null
-
-alter table matriculas
-
-	add constraint FK_estudiante foreign key (id_estudiante) references estudiantes(id_estudiante)
-
-alter table matriculas
-
-	add constraint FK_cursos foreign key (id_curso) references cursos(id_curso)
-
-insert into estudiantes values( 1, 'Ana', 'Perez', 'ana.perez@gmail.com', '2000-05-12', 3001234567 , 17 )
-
-select *
-
-from estudiantes
-
-insert into cursos values ( 101 , 'Base de datos relacionales' , 4 , 'Curso de fundamentos' )
-
-select *
-
-from cursos
-
-insert into matriculas values ( 1 , 1 , 101 , '2025-08-01' )
-
-select *
-
-from matriculas
+select 
+	asignatura as Asignatura,
+	count(distinct id_estudiante) 'Numero de Estudiantes',
+	avg(nota) as 'Promedio Materia',
+	min(nota) as 'Nota Minima',
+	max(nota) as 'Nota Maxima' 
+	from Estudiantes group by(asignatura);
